@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Lista de Tareas{% endblock %}
+
+{% block contenido %}
+    <div class='page-header'>
+        <h1>Mis Tareas</h1>
+        <a href='/agregar' class='btn btn-primary'>+ Nueva Tarea</a>
+    </div>
+
+    <div class='card'>
+        {% if tareas %}
+            <div class='table-wrap'>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Título</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tarea in tareas %}
+                        <tr>
+                            <td style='color:#a0aec0; font-weight:600;'>{{ tarea.id }}</td>
+                            <td style='font-weight:600;'>{{ tarea.titulo }}</td>
+                            <td style='color:#718096;'>{{ tarea.descripcion or '—' }}</td>
+                            <td>
+                                {% if tarea.completada %}
+                                    <span class='badge badge-success'>Completada</span>
+                                {% else %}
+                                    <span class='badge badge-warning'>Pendiente</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href='/editar/{{ tarea.id }}' class='btn btn-primary' style='padding:6px 12px; font-size:0.8rem;'>Editar</a>
+                                <a href='/eliminar/{{ tarea.id }}' class='btn btn-danger' style='padding:6px 12px; font-size:0.8rem;'>Eliminar</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class='empty-state'>
+                <div class='icon'>&#128221;</div>
+                <p>No tienes tareas registradas aún.</p>
+                <a href='/agregar' class='btn btn-primary'>Crear primera tarea</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
