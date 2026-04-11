@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Editar Tarea{% endblock %}
+
+{% block contenido %}
+    <!-- Encabezado de la página con el título y botón volver -->
+    <div class='page-header'>
+        <h1>Editar Tarea</h1>
+        <a href='/' class='btn btn-secondary'>← Volver</a>
+    </div>
+
+    <!-- Tarjeta contenedora del formulario -->
+    <div class='card' style='max-width: 560px;'>
+
+        <!--
+            action='/editar/{{ tarea.id }}' — envía el formulario a la ruta
+            correcta incluyendo el ID de la tarea que se está editando.
+            method='POST' — envía los datos de forma segura en el cuerpo
+            de la solicitud (no en la URL).
+        -->
+        <form method='POST' action='/editar/{{ tarea.id }}'>
+
+            <!-- Campo: Título (obligatorio) -->
+            <div class='form-group'>
+                <label for='titulo'>Título <span style='color:#ef4444;'>*</span></label>
+                <!--
+                    value='{{ tarea.titulo }}' — pre-rellena el campo con el
+                    valor actual de la base de datos para que el usuario no
+                    tenga que escribir todo desde cero.
+                -->
+                <input type='text' id='titulo' name='titulo'
+                       required
+                       value='{{ tarea.titulo }}'
+                       placeholder='Escribe el título de la tarea...'>
+            </div>
+
+            <!-- Campo: Descripción (opcional) -->
+            <div class='form-group'>
+                <label for='descripcion'>Descripción <span style='color:#a0aec0; font-weight:400;'>(opcional)</span></label>
+                <!--
+                    El contenido del <textarea> se coloca entre las etiquetas
+                    de apertura y cierre porque textarea no tiene atributo value.
+                    El filtro | default('') evita mostrar "None" si la descripción
+                    está vacía en la base de datos.
+                -->
+                <textarea id='descripcion' name='descripcion' rows='4'
+                          placeholder='Agrega más detalles si lo necesitas...'>{{ tarea.descripcion | default('') }}</textarea>
+            </div>
+
+            <!-- Campo: Estado de la tarea (checkbox) -->
+            <div class='form-group'>
+                <label style='display:flex; align-items:center; gap:10px; cursor:pointer;'>
+                    <!--
+                        name='completada' — el servidor detecta si este campo
+                        existe en request.form. Si el checkbox está marcado,
+                        Flask recibe 'completada'; si no, el campo no se envía.
+                        checked — pre-marca el checkbox si la tarea ya estaba
+                        completada (tarea.completada es truthy).
+                    -->
+                    <input type='checkbox' name='completada' value='1'
+                           {% if tarea.completada %}checked{% endif %}
+                           style='width:18px; height:18px; cursor:pointer; accent-color:#2563eb;'>
+                    Marcar como completada
+                </label>
+            </div>
+
+            <!-- Botones de acción -->
+            <div style='display:flex; gap:10px; margin-top:8px;'>
+                <button type='submit' class='btn btn-primary'>Guardar Cambios</button>
+                <a href='/' class='btn btn-secondary'>Cancelar</a>
+            </div>
+
+        </form>
+    </div>
+{% endblock %}
